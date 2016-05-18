@@ -5,6 +5,6 @@ cmd = "ec2-describe-tags --filter \"resource-id=#{RESOURCEID}\""
 Open3.popen3(cmd) do |stdin, stdout, stderr, status, thread|
 	while line = stdout.gets
 		split = line.split
-		puts 'aws_' + split[3] + ' => ' + split[4]
+		print 'aws_' + split[3] + '=' + split[4] + "\n"
 	end
 end
