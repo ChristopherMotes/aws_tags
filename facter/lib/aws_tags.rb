@@ -1,4 +1,5 @@
-#!/usr/bin/ruby 
+# Your ec2 instance's AIM role must have at least AmazonEC2ReadOnlyAccess. 
+# DO NOT use keys. Eventually, I'll error trap for this.
 require 'open3'
 Facter.add(:aws_tags) do
 	setcode do
