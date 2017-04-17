@@ -4,10 +4,12 @@ require 'open3'
 ENV['PATH'] = '/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/opt/aws/bin:/opt/puppetlabs/bin'
 Facter.add(:aws_tags) do
 	setcode do
+		INSTANCE_ID_DOC = Facter.value(:"aws_dynamic_instance_id_doc")
+                REGION = INSTANCE_ID_DOC['region']
 		tags_hash =  {}
 		RESOURCEID = `curl  -s http://169.254.169.254/latest/meta-data/instance-id`
-#		cmd = "ec2-describe-tags --filter \"resource-id=#{RESOURCEID}\""
-		cmd = "aws ec2 describe-tags  --region us-east-1 --output text --filter \"Name=resource-id,Values=#{RESOURCEID}\" "
+		ENV['AWS_DEFAULT_REGION'] = REGION
+		cmd = "aws ec2 describe-tags  --output text --filter \"Name=resource-id,Values=#{RESOURCEID}\" "
 		Open3.popen3(cmd) do |stdin, stdout, stderr, status, thread|
 			while line = stdout.gets
 				split = line.split
